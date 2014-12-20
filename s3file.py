@@ -1,10 +1,17 @@
-from urlparse import urlparse
-import cStringIO
+try:
+    from urllib import parse
+except ImportError:
+    from urlparse import urlparse as parse
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from io import StringIO
 import mimetypes
 import os
 import datetime
 
 __version__ = '1.3'
+
 
 def s3open(*args, **kwargs):
     """ Convenience method for creating S3File object.
@@ -18,9 +25,9 @@ class S3File(object):
         from boto.s3.connection import S3Connection
         from boto.s3.key import Key
 
-        self.url = urlparse(url)
+        self.url = parse(url)
         self.expiration_days = expiration_days
-        self.buffer = cStringIO.StringIO()
+        self.buffer = StringIO()
 
         self.private = private
         self.closed = False
@@ -69,7 +76,7 @@ class S3File(object):
             self.truncate(self.tell())
 
             headers = {
-                "x-amz-acl":  "private" if self.private else "public-read"
+                "x-amz-acl": "private" if self.private else "public-read"
             }
 
             if self.content_type:
