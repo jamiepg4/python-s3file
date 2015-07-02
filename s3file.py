@@ -1,7 +1,7 @@
 try:
     from urllib import parse
 except ImportError:
-    from urllib.parse import urlparse as parse
+    from urlparse import urlparse as parse
 try:
     from cStringIO import StringIO
 except ImportError:
